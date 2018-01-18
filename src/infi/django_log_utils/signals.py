@@ -20,6 +20,8 @@ def _get_user(request):
     '''
     Returns a user attribute (e.g. username or email).
     '''
+    if not hasattr(request, 'user'):
+        return '<unknown>'
     return getattr(request.user, settings.AUTH_LOGGING['USER_ATTRIBUTE'])
 
 

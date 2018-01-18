@@ -27,6 +27,13 @@ class ReqDataTestCase(BaseTestCase):
                 ('reqdata', 'INFO', '(Anonymous) POST /admin/auth/group/add/\n    {\n        "name": "aaa"\n    }')
             )
 
+    def test_invalid_json(self):
+        with LogCapture('reqdata') as l:
+            self.client.post('/admin/auth/group/add/', '{' + json.dumps({'name': 'aaa'}), content_type='application/json')
+            l.check(
+                ('reqdata', 'INFO', '(Anonymous) POST /admin/auth/group/add/\n    {{"name": "aaa"}')
+            )
+
     def test_raw(self):
         with LogCapture('reqdata') as l:
             self.client.post('/admin/auth/group/add/', 'aaa\nbbb', content_type='text/plain')
