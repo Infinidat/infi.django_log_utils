@@ -2,8 +2,15 @@ import logging
 import json
 import settings
 
+# Django 1.10+ middleware compatibility
+try:
+    from django.utils.deprecation import MiddlewareMixin
+except:
+    class MiddlewareMixin(object):
+        pass
 
-class RequestDataLoggingMiddleware(object):
+
+class RequestDataLoggingMiddleware(MiddlewareMixin):
 
     logger = logging.getLogger(settings.REQUEST_DATA_LOGGING['LOGGER_NAME'])
     attribute = settings.REQUEST_DATA_LOGGING['USER_ATTRIBUTE']
@@ -58,7 +65,7 @@ class RequestDataLoggingMiddleware(object):
         return data
 
 
-class SetUserHeaderMiddleware(object):
+class SetUserHeaderMiddleware(MiddlewareMixin):
     '''
     Adds an X-User header to the response, identifying the authenticated user (or "-" for anonymous users).
     The motivation is to output the header's value in the NGINX log_format (use $sent_http_x_user).
