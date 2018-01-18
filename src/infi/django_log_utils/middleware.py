@@ -52,7 +52,11 @@ class RequestDataLoggingMiddleware(MiddlewareMixin):
         return '\n'.join(lines)
 
     def json_reqdata(self, data):
-        data = json.loads(data)
+        try:
+            data = json.loads(data)
+        except:
+            # Invalid json, log it as raw
+            return self.raw_reqdata(data)
         if isinstance(data, dict):
             for key in self.sanitized_params:
                 if key in data:
