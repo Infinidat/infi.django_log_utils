@@ -22,6 +22,9 @@ def _format_errors(form):
 
 
 def log_validation_errors(form_cls):
+    '''
+    Decorate a form or a formset with this decorator to log all validation errors.
+    '''
     orig_full_clean = getattr(form_cls, 'full_clean')
     def _full_clean_and_log(self):
         orig_full_clean(self)
