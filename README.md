@@ -114,4 +114,4 @@ Run the following commands:
 The tests directory contains a demo Django project which is used for testing. To run the tests:
 
     cd src/tests
-    ./manage test
+    ./manage.py test

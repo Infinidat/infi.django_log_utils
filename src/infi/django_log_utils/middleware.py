@@ -61,9 +61,13 @@ class RequestDataLoggingMiddleware(MiddlewareMixin):
             for key in self.sanitized_params:
                 if key in data:
                     data[key] = '********************'
-        return json.dumps(data, indent=4, ensure_ascii=True)
+        return json.dumps(data, indent=4, ensure_ascii=False)
 
     def raw_reqdata(self, data):
+        try:
+            data = data.decode('utf-8')
+        except:
+            data = '* cannot decode *'
         if len(data) > self.max_body_length:
             data = "%s\n...\n" % data[0:self.max_body_length]
         return data
