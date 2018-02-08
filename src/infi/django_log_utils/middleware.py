@@ -41,7 +41,7 @@ class RequestDataLoggingMiddleware(MiddlewareMixin):
 
     def querydict_reqdata(self, querydict):
         lines = []
-        for key, values in querydict.iterlists():
+        for key, values in querydict.lists():
             if key in self.sanitized_params:
                 values = ['********************']
             if len(values) == 1:
