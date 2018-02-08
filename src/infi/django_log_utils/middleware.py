@@ -1,6 +1,6 @@
 import logging
 import json
-import settings
+from . import settings
 
 # Django 1.10+ middleware compatibility
 try:
