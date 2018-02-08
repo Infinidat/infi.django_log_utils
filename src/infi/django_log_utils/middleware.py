@@ -35,7 +35,7 @@ class RequestDataLoggingMiddleware(MiddlewareMixin):
 
     def get_user(self, request):
         user = 'Anonymous'
-        if hasattr(request, 'user') and not request.user.is_anonymous():
+        if hasattr(request, 'user') and request.user.is_authenticated:
             user = getattr(request.user, self.attribute)
         return user
 
@@ -84,7 +84,7 @@ class SetUserHeaderMiddleware(MiddlewareMixin):
 
     def process_response(self, request, response):
         user = '-'
-        if hasattr(request, 'user') and not request.user.is_anonymous():
+        if hasattr(request, 'user') and request.user.is_authenticated:
             user = getattr(request.user, self.attribute)
         response['X-User'] = user
         return response
