@@ -21,9 +21,9 @@ class RequestDataLoggingMiddleware(MiddlewareMixin):
         if self.should_log(request):
             if request.POST:
                 reqdata = self.querydict_reqdata(request.POST)
-            elif request.META['CONTENT_TYPE'] == 'application/json':
+            elif request.META.get('CONTENT_TYPE') == 'application/json':
                 reqdata = self.json_reqdata(request.body)
-            elif (request.body):
+            elif request.body:
                 reqdata = self.raw_reqdata(request.body)
             reqdata = reqdata.replace('\n', '\n    ')
             self.logger.info("(%s) %s %s\n    %s" % (
