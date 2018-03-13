@@ -1,6 +1,6 @@
 import logging
 import json
-import settings
+from . import settings
 
 # Django 1.10+ middleware compatibility
 try:
@@ -21,9 +21,9 @@ class RequestDataLoggingMiddleware(MiddlewareMixin):
         if self.should_log(request):
             if request.POST:
                 reqdata = self.querydict_reqdata(request.POST)
-            elif request.META['CONTENT_TYPE'] == 'application/json':
+            elif request.META.get('CONTENT_TYPE') == 'application/json':
                 reqdata = self.json_reqdata(request.body)
-            elif (request.body):
+            elif request.body:
                 reqdata = self.raw_reqdata(request.body)
             reqdata = reqdata.replace('\n', '\n    ')
             self.logger.info("(%s) %s %s\n    %s" % (
@@ -35,13 +35,13 @@ class RequestDataLoggingMiddleware(MiddlewareMixin):
 
     def get_user(self, request):
         user = 'Anonymous'
-        if hasattr(request, 'user') and not request.user.is_anonymous():
+        if hasattr(request, 'user') and request.user.is_authenticated:
             user = getattr(request.user, self.attribute)
         return user
 
     def querydict_reqdata(self, querydict):
         lines = []
-        for key, values in querydict.iterlists():
+        for key, values in querydict.lists():
             if key in self.sanitized_params:
                 values = ['********************']
             if len(values) == 1:
@@ -84,7 +84,7 @@ class SetUserHeaderMiddleware(MiddlewareMixin):
 
     def process_response(self, request, response):
         user = '-'
-        if hasattr(request, 'user') and not request.user.is_anonymous():
+        if hasattr(request, 'user') and request.user.is_authenticated:
             user = getattr(request.user, self.attribute)
         response['X-User'] = user
         return response

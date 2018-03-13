@@ -7,4 +7,4 @@ class Config(AppConfig):
 
     def ready(self):
         # Register signal handlers
-        import signals
+        from . import signals
