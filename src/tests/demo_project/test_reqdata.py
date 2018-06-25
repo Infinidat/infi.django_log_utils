@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 
-from test_base import BaseTestCase
+from .test_base import BaseTestCase
 from testfixtures import LogCapture
 import json
 
@@ -11,7 +11,7 @@ class ReqDataTestCase(BaseTestCase):
         with LogCapture('reqdata') as l:
             self.login()
             l.check(
-                ('reqdata', 'INFO', '(Anonymous) POST /admin/login/\n    username = "admin"\n    password = "********************"'),
+                ('reqdata', 'INFO', '(Anonymous) POST /admin/login/\n    password = "********************"\n    username = "admin"'),
             )
 
     def test_logged_in_user(self):
@@ -33,7 +33,7 @@ class ReqDataTestCase(BaseTestCase):
         with LogCapture('reqdata') as l:
             self.client.post('/admin/auth/group/add/', json.dumps({'name': u'דוד'}), content_type='application/json')
             l.check(
-                ('reqdata', 'INFO', u'(Anonymous) POST /admin/auth/group/add/\n    {\n        "name": "דוד"\n    }')
+                ('reqdata', 'INFO', u'(Anonymous) POST /admin/auth/group/add/\n    {\n        "name": "\\u05d3\\u05d5\\u05d3"\n    }')
             )
 
     def test_invalid_json(self):

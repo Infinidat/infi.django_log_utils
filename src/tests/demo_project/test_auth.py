@@ -1,5 +1,9 @@
-from test_base import BaseTestCase
+from .test_base import BaseTestCase
 from testfixtures import LogCapture
+import sys
+
+
+PY3 =  (sys.version_info > (3, 0))
 
 
 class AuthTestCase(BaseTestCase):
@@ -16,4 +20,5 @@ class AuthTestCase(BaseTestCase):
     def test_invalid_login(self):
         with LogCapture('auth') as l:
             self.client.post('/admin/login/', {'username': self.MOCK_USERNAME, 'password': 'wrong'})
-            l.check(('auth', 'WARNING', "Invalid login attempt: {'username': u'admin', 'password': '********************'}"))
+            u = '' if PY3 else 'u'
+            l.check(('auth', 'WARNING', "Invalid login attempt: {'password': '********************', 'username': %s'admin'}" % u))

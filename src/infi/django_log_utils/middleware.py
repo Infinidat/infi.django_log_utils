@@ -41,7 +41,7 @@ class RequestDataLoggingMiddleware(MiddlewareMixin):
 
     def querydict_reqdata(self, querydict):
         lines = []
-        for key, values in querydict.lists():
+        for key, values in sorted(querydict.lists()):
             if key in self.sanitized_params:
                 values = ['********************']
             if len(values) == 1:
@@ -53,7 +53,10 @@ class RequestDataLoggingMiddleware(MiddlewareMixin):
 
     def json_reqdata(self, data):
         try:
-            data = json.loads(data)
+            if isinstance(data, bytes):
+                data = json.loads(data.decode('utf-8'))
+            else:
+                data = json.loads(data)
         except:
             # Invalid json, log it as raw
             return self.raw_reqdata(data)
@@ -61,7 +64,7 @@ class RequestDataLoggingMiddleware(MiddlewareMixin):
             for key in self.sanitized_params:
                 if key in data:
                     data[key] = '********************'
-        return json.dumps(data, indent=4, ensure_ascii=False)
+        return json.dumps(data, indent=4, ensure_ascii=True, sort_keys=True)
 
     def raw_reqdata(self, data):
         try:

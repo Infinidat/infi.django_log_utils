@@ -2,6 +2,7 @@ from django.contrib.auth.signals import user_logged_in, user_logged_out, user_lo
 from django.dispatch import receiver
 from ipware import get_client_ip
 from . import settings
+from pprint import pformat
 import logging
 
 
@@ -48,6 +49,6 @@ def user_login_failed_callback(sender, credentials, **kwargs):
     '''
     if 'request' in kwargs:
         ip = _get_ip(kwargs['request'])
-        logger.warning('Invalid login attempt from ip %s: %s', ip, credentials)
+        logger.warning('Invalid login attempt from ip %s: %s', ip, pformat(credentials))
     else:
-        logger.warning('Invalid login attempt: %s', credentials)
+        logger.warning('Invalid login attempt: %s', pformat(credentials))

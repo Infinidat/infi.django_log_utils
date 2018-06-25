@@ -1,6 +1,7 @@
 Overview
 ========
 This is a reusable Django app that provides various useful utilities related to logging.
+It was tested under Python 2.7 and 3.5.
 
 Usage
 =====
